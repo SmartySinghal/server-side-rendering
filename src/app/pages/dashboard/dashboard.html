@@ -1,0 +1,17 @@
+<section class="page">
+  <h1>Dashboard <small>(Client-side rendered only)</small></h1>
+  <app-render-info page="dashboard" mode="Client (CSR)" />
+
+  <p>
+    This page uses <code>RenderMode.Client</code>. The server sends an <strong>empty shell</strong>
+    and the browser builds the page. Open <em>View page source</em> on this URL: none of this
+    text is in it. Use this mode for private pages (dashboards, profiles) that Google never sees
+    and that need browser-only things like <code>localStorage</code>.
+  </p>
+
+  <div class="card">
+    <h2>Visits (stored in localStorage)</h2>
+    <p class="value"><strong>{{ visits() }}</strong></p>
+    <button type="button" (click)="reset()">Reset</button>
+  </div>
+</section>

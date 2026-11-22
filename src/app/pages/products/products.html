@@ -1,0 +1,25 @@
+<section class="page">
+  <h1>Products <small>(Server-side rendered on every request)</small></h1>
+  <app-render-info page="products" mode="Server (SSR)" />
+
+  <p>
+    This page uses <code>RenderMode.Server</code>. For each request, the server calls
+    <code>/api/products</code>, waits for the data and sends <strong>complete HTML</strong>.
+    Refresh the page and the time above changes. Right-click → <em>View page source</em>
+    and the product names are already in the HTML.
+  </p>
+
+  @if (products(); as list) {
+    <div class="grid">
+      @for (p of list; track p.id) {
+        <a class="product" [routerLink]="['/products', p.id]">
+          <h3>{{ p.name }}</h3>
+          <p class="price">{{ p.price | currency: 'INR' }}</p>
+          <p class="muted">{{ p.stock }} in stock</p>
+        </a>
+      }
+    </div>
+  } @else {
+    <p class="muted">Loading products...</p>
+  }
+</section>

@@ -13,16 +13,49 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Log every request so you can see the SSR flow in the terminal:
+ *   [PAGE] /products      → Angular renders this page on the server
+ *   [API]  /api/products  → data request (from the server render, or from the browser)
  */
+app.use((req, res, next) => {
+  const isApi = req.path.startsWith('/api/');
+  const isFile = /\.[a-z0-9]+$/i.test(req.path);
+  if (isApi || !isFile) {
+    const start = Date.now();
+    res.on('finish', () =>
+      console.log(`${isApi ? '[API] ' : '[PAGE]'} ${req.method} ${req.originalUrl} → ${res.statusCode} (${Date.now() - start} ms)`),
+    );
+  }
+  next();
+});
+
+/**
+ * Demo REST API. In a real app this data would come from a database.
+ * The 400 ms delay makes it easy to notice that the server WAITS for the
+ * data before it sends the HTML.
+ */
+const products = [
+  { id: 1, name: 'Wireless Headphones', price: 2999, stock: 12, description: 'Noise-cancelling over-ear headphones with 30-hour battery life.' },
+  { id: 2, name: 'Mechanical Keyboard', price: 4499, stock: 5, description: 'Hot-swappable switches, RGB lighting and an aluminium frame.' },
+  { id: 3, name: 'USB-C Hub', price: 1599, stock: 30, description: '7-in-1 hub with HDMI 4K, SD card reader and 100 W charging.' },
+  { id: 4, name: 'Webcam 1080p', price: 2199, stock: 0, description: 'Full HD webcam with dual microphones and a privacy cover.' },
+];
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+app.get('/api/products', async (req, res) => {
+  await delay(400);
+  res.json(products);
+});
+
+app.get('/api/products/:id', async (req, res) => {
+  await delay(400);
+  const product = products.find(p => p.id === Number(req.params.id));
+  if (product) {
+    res.json(product);
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
 
 /**
  * Serve static files from /browser

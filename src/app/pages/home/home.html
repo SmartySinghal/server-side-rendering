@@ -1,0 +1,39 @@
+<section class="page">
+  <h1>Home <small>(Prerendered at build time)</small></h1>
+  <app-render-info page="home" mode="Prerender (SSG)" />
+
+  <p>
+    This page uses <code>RenderMode.Prerender</code>. Its HTML was created <strong>once</strong>,
+    when you ran <code>npm run build</code>, and saved as a file. Every visitor gets that same file,
+    so the time shown above stays the same until you build again.
+  </p>
+
+  <div class="card">
+    <h2>1. Event replay</h2>
+    <p>
+      Clicks made <em>before</em> JavaScript finishes loading are recorded and replayed
+      after hydration (<code>withEventReplay()</code>), so nothing is lost.
+    </p>
+    <button type="button" (click)="addClick()">Clicked {{ clicks() }} times</button>
+  </div>
+
+  <div class="card">
+    <h2>2. Browser-only APIs</h2>
+    <p>
+      <code>window</code> does not exist on the server. This value is read inside
+      <code>afterNextRender()</code>, which only runs in the browser:
+    </p>
+    <p class="value">
+      Screen width:
+      @if (screenWidth(); as w) { <strong>{{ w }}px</strong> } @else { <em>unknown on the server</em> }
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Try the other render modes</h2>
+    <ul>
+      <li><a routerLink="/products">Products</a>: rendered on the server for <strong>every request</strong> (SSR)</li>
+      <li><a routerLink="/dashboard">Dashboard</a>: rendered <strong>only in the browser</strong> (CSR)</li>
+    </ul>
+  </div>
+</section>

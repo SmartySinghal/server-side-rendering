@@ -1,0 +1,22 @@
+<section class="page">
+  <a routerLink="/products">← All products</a>
+
+  @if (product(); as p) {
+    <h1>{{ p.name }} <small>(SSR)</small></h1>
+    <app-render-info [page]="'product-' + p.id" mode="Server (SSR)" />
+
+    <div class="card">
+      <p class="price">{{ p.price | currency: 'INR' }}</p>
+      <p>{{ p.description }}</p>
+      <p class="muted">{{ p.stock }} in stock</p>
+    </div>
+
+    <p class="muted">
+      Open this URL directly (or refresh) to get it from the server.
+      Click it from the product list and it is rendered by the browser instead,
+      because Angular is already running.
+    </p>
+  } @else {
+    <p class="muted">Loading product...</p>
+  }
+</section>
