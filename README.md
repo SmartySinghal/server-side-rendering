@@ -1,5 +1,7 @@
 # Angular SSR demo (Angular 22)
 
+![Screenshot](docs/screenshot.jpg)
+
 A small example that shows **how server-side rendering works** in Angular, using all
 three render modes side by side:
 
